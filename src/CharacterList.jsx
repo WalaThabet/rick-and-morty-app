@@ -5,10 +5,22 @@ import { useQuery, gql } from "@apollo/client";
 const CharacterList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [nameFilter, setNameFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [speciesFilter, setSpeciesFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const statusOptions = ["Alive", "Dead", "unknown"];
+  const speciesOptions = ["Human", "Alien", "Robot"];
   const GET_CHARACTERS = gql`
-    query GetCharacters($page: Int, $name: String) {
-      characters(page: $page, filter: { name: $name }) {
+    query GetCharacters(
+      $page: Int
+      $name: String
+      $status: String
+      $species: String
+    ) {
+      characters(
+        page: $page
+        filter: { name: $name, status: $status, species: $species }
+      ) {
         info {
           count
           pages
@@ -24,7 +36,12 @@ const CharacterList = () => {
     }
   `;
   const { loading, error, data } = useQuery(GET_CHARACTERS, {
-    variables: { page: currentPage, name: nameFilter },
+    variables: {
+      page: currentPage,
+      name: nameFilter || null,
+      status: statusFilter || null,
+      species: speciesFilter || null,
+    },
   });
 
   const goToNextPage = () => {
@@ -47,6 +64,29 @@ const CharacterList = () => {
         <h1 className="text-2xl font-bold mb-4">Rick and Morty Characters</h1>
         {error && <p>Error: {error.message}</p>}
         <br></br>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="dropdown-class"
+        >
+          {statusOptions.map((option) => (
+            <option key={option} value={option}>
+              {option || "All Statuses"}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={speciesFilter}
+          onChange={(e) => setSpeciesFilter(e.target.value)}
+          className="dropdown-class"
+        >
+          {speciesOptions.map((option) => (
+            <option key={option} value={option}>
+              {option || "All Species"}
+            </option>
+          ))}
+        </select>
         <input
           className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           type="text"
