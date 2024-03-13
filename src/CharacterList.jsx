@@ -19,9 +19,6 @@ const CharacterList = () => {
           id
           name
           image
-          status
-          species
-          gender
         }
       }
     }

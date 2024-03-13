@@ -16,9 +16,6 @@ const Character = ({ character }) => {
           className="w-full h-auto rounded-md mb-2"
         />
         <h2 className="text-lg font-semibold">{character.name}</h2>
-        <p>Status: {character.status}</p>
-        <p>Species: {character.species}</p>
-        <p>Gender: {character.gender}</p>
       </div>
     </div>
   );
