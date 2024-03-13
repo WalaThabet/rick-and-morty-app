@@ -7,8 +7,8 @@ const CharacterList = () => {
   const [nameFilter, setNameFilter] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const GET_CHARACTERS = gql`
-    query GetCharacters($page: Int) {
-      characters(page: $page) {
+    query GetCharacters($page: Int, $name: String) {
+      characters(page: $page, filter: { name: $name }) {
         info {
           count
           pages
@@ -24,7 +24,7 @@ const CharacterList = () => {
     }
   `;
   const { loading, error, data } = useQuery(GET_CHARACTERS, {
-    variables: { page: currentPage },
+    variables: { page: currentPage, name: nameFilter },
   });
 
   const goToNextPage = () => {
@@ -48,19 +48,12 @@ const CharacterList = () => {
         {error && <p>Error: {error.message}</p>}
         <br></br>
         <input
-          className="flex-grow rounded-l-md border border-gray-200 px-4 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           type="text"
           placeholder="Filter by name"
           value={nameFilter}
           onChange={(e) => setNameFilter(e.target.value)}
         />
-        <button
-          className="rounded-r-md bg-blue-500 text-white px-4 hover:bg-blue-600 py-2"
-          onClick={handleSearch}
-        >
-          Search
-        </button>
-
         <br></br>
         <br></br>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
