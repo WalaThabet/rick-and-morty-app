@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import Character from "./Character";
 import { useQuery, gql } from "@apollo/client";
+import Select from "react-tailwindcss-select";
 
 const CharacterList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [nameFilter, setNameFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [speciesFilter, setSpeciesFilter] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const statusOptions = ["Alive", "Dead", "unknown"];
-  const speciesOptions = ["Human", "Alien", "Robot"];
+  const speciesOptions = [
+    { value: "Human", label: "🧑 Human" },
+    { value: "Alien", label: "👽 Alien" },
+    { value: "Robot", label: "🤖 Robot" },
+  ];
+  const statusOptions = [
+    { value: "Alive", label: "🫁 Alive" },
+    { value: "Dead", label: "⚰️ Dead" },
+    { value: "unknown", label: "❓ unknown" },
+  ];
   const GET_CHARACTERS = gql`
     query GetCharacters(
       $page: Int
@@ -54,39 +62,29 @@ const CharacterList = () => {
     }
   };
 
-  const handleSearch = () => {
-    setSearchTerm(nameFilter);
-  };
-
   return (
     <div className="App">
       <div className="container mx-auto p-4">
         <h1 className="text-2xl font-bold mb-4">Rick and Morty Characters</h1>
+        {loading && <p>Loading...</p>}
         {error && <p>Error: {error.message}</p>}
         <br></br>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="dropdown-class"
-        >
-          {statusOptions.map((option) => (
-            <option key={option} value={option}>
-              {option || "All Statuses"}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={speciesFilter}
-          onChange={(e) => setSpeciesFilter(e.target.value)}
-          className="dropdown-class"
-        >
-          {speciesOptions.map((option) => (
-            <option key={option} value={option}>
-              {option || "All Species"}
-            </option>
-          ))}
-        </select>
+        <Select
+          value={speciesOptions.find(
+            (option) => option.value === speciesFilter
+          )}
+          options={speciesOptions}
+          onChange={(selectedOption) => setSpeciesFilter(selectedOption.value)}
+          placeholder="Select Species"
+          className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        ></Select>
+        <Select
+          value={statusOptions.find((option) => option.value === statusFilter)}
+          options={statusOptions}
+          onChange={(selectedOption) => setStatusFilter(selectedOption.value)}
+          placeholder="Select Status"
+          className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        ></Select>
         <input
           className="mt-2 block w-full rounded-md border border-gray-200 px-2 py-2 shadow-sm outline-none focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           type="text"
