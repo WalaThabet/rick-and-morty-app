@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import CharacterList from "./CharacterList";
-import CharacterDetails from "./CharacterDetails";
+import CharacterList from "./components/CharacterList";
+import CharacterDetails from "./components/CharacterDetails";
 import client from "./apolloClient";
 import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
